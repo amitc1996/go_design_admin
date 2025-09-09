@@ -1,6 +1,6 @@
 import Dashboard from "layouts/dashboard";
 import Icon from "@mui/material/Icon";
-
+import SignIn from "pages/auth/Login";
 const routes = [
   {
     type: "collapse",
@@ -41,6 +41,11 @@ const routes = [
     icon: <Icon fontSize="small">logout</Icon>,
     route: "/logout",
     component: <Dashboard />,
+  },
+  {
+    icon: <Icon fontSize="small">login</Icon>,
+    route: "/login",
+    component: <SignIn />,
   },
 ];
 

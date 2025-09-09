@@ -41,34 +41,16 @@ function Footer({ light }) {
           justifyContent="space-between"
           alignItems="center"
           px={1.5}
-        >
-          <MDBox
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            flexWrap="wrap"
-            color={light ? "white" : "text"}
-            fontSize={size.sm}
-          >
-            &copy; {new Date().getFullYear()}, made with
-            <MDBox fontSize={size.md} color={light ? "white" : "dark"} mb={-0.5} mx={0.25}>
-              <Icon color="inherit" fontSize="inherit">
-                favorite
-              </Icon>
-            </MDBox>
-          </MDBox>
-        </MDBox>
+        ></MDBox>
       </Container>
     </MDBox>
   );
 }
 
-// Setting default props for the Footer
 Footer.defaultProps = {
   light: false,
 };
 
-// Typechecking props for the Footer
 Footer.propTypes = {
   light: PropTypes.bool,
 };
