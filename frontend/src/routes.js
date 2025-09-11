@@ -1,6 +1,8 @@
 import Dashboard from "layouts/dashboard";
 import Icon from "@mui/material/Icon";
 import SignIn from "pages/auth/Login";
+import ForgotPassword from "pages/auth/ForgotPassword";
+import ResetPassword from "pages/auth/ResetPassword";
 const routes = [
   {
     type: "collapse",
@@ -43,9 +45,16 @@ const routes = [
     component: <Dashboard />,
   },
   {
-    icon: <Icon fontSize="small">login</Icon>,
     route: "/login",
     component: <SignIn />,
+  },
+  {
+    route: "/forgot_password",
+    component: <ForgotPassword />,
+  },
+  {
+    route: "/reset_password",
+    component: <ResetPassword />,
   },
 ];
 

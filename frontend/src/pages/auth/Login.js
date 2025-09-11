@@ -71,7 +71,7 @@ function Basic() {
                 Forgot your password?{" "}
                 <MDTypography
                   component={Link}
-                  to="/authentication/forgot-password"
+                  to="/forgot_password"
                   variant="button"
                   color="info"
                   fontWeight="medium"

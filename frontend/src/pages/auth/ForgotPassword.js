@@ -4,12 +4,6 @@ import { Link } from "react-router-dom";
 
 import Card from "@mui/material/Card";
 import Switch from "@mui/material/Switch";
-import Grid from "@mui/material/Grid";
-import MuiLink from "@mui/material/Link";
-
-import FacebookIcon from "@mui/icons-material/Facebook";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import GoogleIcon from "@mui/icons-material/Google";
 
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
@@ -19,8 +13,7 @@ import MDButton from "components/MDButton";
 import BasicLayout from "layouts/authentication/components/BasicLayout";
 
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
-import logoImage from "assets/images/logo.png"; // <-- add your logo image here
-
+import logoImage from "assets/images/logo.png";
 function Basic() {
   const [rememberMe, setRememberMe] = useState(false);
 
@@ -44,7 +37,7 @@ function Basic() {
             <img src={logoImage} alt="Brand Logo" style={{ width: "100px", height: "auto" }} />
           </MDBox>
           <MDTypography variant="h6" fontWeight="medium" color="white" mt={1}>
-            Sign in
+            Forgot Password
           </MDTypography>
         </MDBox>
 
@@ -53,38 +46,22 @@ function Basic() {
             <MDBox mb={2}>
               <MDInput type="email" label="Email" fullWidth />
             </MDBox>
-            <MDBox mb={2}>
-              <MDInput type="password" label="Password" fullWidth />
-            </MDBox>
-            <MDBox display="flex" alignItems="center" ml={-1}>
-              <Switch checked={rememberMe} onChange={handleSetRememberMe} />
-              <MDTypography
-                variant="button"
-                fontWeight="regular"
-                color="text"
-                onClick={handleSetRememberMe}
-                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-              >
-                &nbsp;&nbsp;Remember me
-              </MDTypography>
-            </MDBox>
             <MDBox mt={4} mb={1}>
               <MDButton variant="gradient" color="info" fullWidth>
-                sign in
+                Send reset link
               </MDButton>
             </MDBox>
             <MDBox mt={3} mb={1} textAlign="center">
               <MDTypography variant="button" color="text">
-                Forgot your password?{" "}
                 <MDTypography
                   component={Link}
-                  to="/authentication/forgot-password"
+                  to="/login"
                   variant="button"
                   color="info"
                   fontWeight="medium"
                   textGradient
                 >
-                  Click here
+                  Back to sign in
                 </MDTypography>
               </MDTypography>
             </MDBox>
