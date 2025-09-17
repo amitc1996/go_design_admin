@@ -19,6 +19,7 @@
         "endOfLine": "auto"
       }
     ],
+    "react/prop-types": "off",
     "react/display-name": "off",
     "default-param-last": "off",
     "react/react-in-jsx-scope": "off",

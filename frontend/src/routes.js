@@ -1,8 +1,11 @@
-import Dashboard from "layouts/dashboard";
+import Dashboard from "pages/Dashboard";
+import AccountSettings from "pages/AccountSettings";
 import Icon from "@mui/material/Icon";
 import SignIn from "pages/auth/Login";
 import ForgotPassword from "pages/auth/ForgotPassword";
 import ResetPassword from "pages/auth/ResetPassword";
+import Users from "pages/users/user";
+import Projects from "pages/projects/project";
 const routes = [
   {
     type: "collapse",
@@ -18,7 +21,7 @@ const routes = [
     key: "users",
     icon: <Icon fontSize="small">group</Icon>, // changed
     route: "/users",
-    component: <Dashboard />,
+    component: <Users />,
   },
   {
     type: "collapse",
@@ -26,7 +29,7 @@ const routes = [
     key: "projects",
     icon: <Icon fontSize="small">work</Icon>, // changed
     route: "/projects",
-    component: <Dashboard />,
+    component: <Projects />,
   },
   {
     type: "collapse",
@@ -34,7 +37,7 @@ const routes = [
     key: "settings",
     icon: <Icon fontSize="small">settings</Icon>,
     route: "/settings",
-    component: <Dashboard />,
+    component: <AccountSettings />,
   },
   {
     type: "collapse",
