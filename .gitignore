@@ -1,0 +1,20 @@
+# Node.js dependencies
+backend/src/node_modules/
+
+# Environment variables
+backend/src/.env
+
+# Logs
+backend/src/npm-debug.log*
+backend/src/yarn-debug.log*
+backend/src/yarn-error.log*
+
+# Optional: Mac & Linux system files
+.DS_Store
+*.swp
+
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+
+.vscode/

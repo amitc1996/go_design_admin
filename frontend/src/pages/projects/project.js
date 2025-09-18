@@ -1,24 +1,18 @@
 import { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-import Icon from "@mui/material/Icon";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
 
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDSnackbar from "components/MDSnackbar";
 
 import PageLayout from "pages/layouts/PageLayout";
+import DataTable from "examples/Tables/DataTable";
 
-import { listUsers } from "api/user";
+import { listUsers } from "api/user"; // Replace this with your real API (e.g., listProjects)
 
-export default function UsersPage() {
-  const [users, setUsers] = useState([]);
+export default function ProjectsPage() {
+  const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -26,12 +20,12 @@ export default function UsersPage() {
     let isMounted = true;
     const fetchProjects = async () => {
       try {
-        const data = await listUsers();
+        const data = await listUsers(); // <-- Replace with listProjects() if available
         if (isMounted) {
-          setUsers(Array.isArray(data) ? data : data?.items || []);
+          setProjects(Array.isArray(data) ? data : data?.items || []);
         }
       } catch (err) {
-        if (isMounted) setError(err?.message || "Failed to load users");
+        if (isMounted) setError(err?.message || "Failed to load projects");
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -42,57 +36,42 @@ export default function UsersPage() {
     };
   }, []);
 
+  // Define DataTable columns
+  const columns = [
+    { Header: "ID", accessor: "id" },
+    { Header: "Name", accessor: "name" },
+    { Header: "Owner", accessor: "owner" },
+    { Header: "Status", accessor: "status" },
+  ];
+
+  // Transform project data into rows for DataTable
+  const rows = projects.map((p) => ({
+    id: p.id || p._id,
+    name: p.name || "Untitled",
+    owner: p.owner?.name || p.owner || "N/A",
+    status: p.status || "Unknown",
+  }));
+
   return (
     <PageLayout>
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <Card>
-            {/* <MDBox display="flex" alignItems="center" justifyContent="space-between" p={2}>
-              <MDTypography variant="h6">Projects</MDTypography>
-              <Icon fontSize="small">work</Icon>
-            </MDBox> */}
-
             {loading ? (
               <MDBox px={2} pb={2}>
                 <MDTypography variant="button" color="text">
-                  Loading users…
+                  Loading projects…
                 </MDTypography>
               </MDBox>
             ) : (
-              <TableContainer>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>ID</TableCell>
-                      <TableCell>Name</TableCell>
-                      <TableCell>Email</TableCell>
-                      <TableCell>Role</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {users.length === 0 ? (
-                      <TableRow>
-                        <TableCell colSpan={4}>
-                          <MDTypography variant="button" color="text">
-                            No users found.
-                          </MDTypography>
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      users.map((u) => (
-                        <TableRow key={u.id || u._id}>
-                          <TableCell>{u.id || u._id}</TableCell>
-                          <TableCell>
-                            {u.name || `${u.firstName || ""} ${u.lastName || ""}`.trim()}
-                          </TableCell>
-                          <TableCell>{u.email}</TableCell>
-                          <TableCell>{u.role || u.type || ""}</TableCell>
-                        </TableRow>
-                      ))
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+              <DataTable
+                table={{ columns, rows }}
+                isSorted={true}
+                entriesPerPage={true}
+                showTotalEntries={true}
+                noEndBorder
+                canSearch={true}
+              />
             )}
           </Card>
         </Grid>

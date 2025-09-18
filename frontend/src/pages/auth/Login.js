@@ -13,9 +13,10 @@ import BasicLayout from "layouts/authentication/components/BasicLayout";
 
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 import logoImage from "assets/images/logo.png";
+import { useAuthDispatch, login } from "store/AuthContext";
 
 function Basic() {
-  // const dispatch = useAuthDispatch();
+  const dispatch = useAuthDispatch();
   const navigate = useNavigate();
 
   const [rememberMe, setRememberMe] = useState(false);
@@ -31,11 +32,11 @@ function Basic() {
     setError(null);
     setLoading(true);
     try {
-      // await login(dispatch, {
-      //   email,
-      //   password,
-      //   remember: rememberMe,
-      // });
+      await login(dispatch, {
+        email,
+        password,
+        remember: rememberMe,
+      });
       navigate("/dashboard");
     } catch (err) {
       console.error("Login error:", err);

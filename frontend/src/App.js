@@ -25,6 +25,9 @@ import routes from "routes";
 
 import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "context";
 
+import PrivateRoute from "own_components/PrivateRoute";
+import PublicRoute from "own_components/PublicRoute";
+
 import brandWhite from "assets/images/logo.png";
 import brandDark from "assets/images/logo.png";
 
@@ -85,7 +88,12 @@ export default function App() {
       }
 
       if (route.route) {
-        return <Route exact path={route.route} element={route.component} key={route.key} />;
+        const element = route.isPrivate ? (
+          <PrivateRoute>{route.component}</PrivateRoute>
+        ) : (
+          <PublicRoute>{route.component}</PublicRoute>
+        );
+        return <Route exact path={route.route} element={element} key={route.key || route.route} />;
       }
 
       return null;
