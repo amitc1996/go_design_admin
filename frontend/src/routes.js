@@ -49,7 +49,6 @@ const routes = [
     key: "logout",
     icon: <Icon fontSize="small">logout</Icon>,
     route: "/logout",
-    component: <Dashboard />,
     isPrivate: true,
   },
   {

@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 import bcrypt from "bcryptjs";
 import sequelize from "../config/db.js";
 
-const User = sequelize.define("user", {
+const User = sequelize.define("admin_user", {
   id: { 
     type: DataTypes.BIGINT,
     autoIncrement: true,
@@ -106,21 +106,6 @@ const User = sequelize.define("user", {
 
 User.prototype.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
-};
-
-User.prototype.addToWallet = async function (amount) {
-  this.wallet_balance = parseFloat(this.wallet_balance || 0) + parseFloat(amount);
-  await this.save();
-  return this.wallet_balance;
-};
-
-User.prototype.deductFromWallet = async function (amount) {
-  if (parseFloat(this.wallet_balance || 0) < parseFloat(amount)) {
-    throw new Error("Insufficient wallet balance");
-  }
-  this.wallet_balance = parseFloat(this.wallet_balance) - parseFloat(amount);
-  await this.save();
-  return this.wallet_balance;
 };
 
 export default User;
