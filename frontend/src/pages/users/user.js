@@ -36,18 +36,26 @@ export default function UsersPage() {
     };
   }, []);
 
+  // Define columns to match your JSON fields
   const columns = [
-    { Header: "ID", accessor: "id" },
-    { Header: "Name", accessor: "name" },
+    { Header: "First Name", accessor: "first_name" },
+    { Header: "Last Name", accessor: "last_name" },
     { Header: "Email", accessor: "email" },
-    { Header: "Role", accessor: "role" },
+    { Header: "Phone", accessor: "phone" },
+    { Header: "Wallet Balance", accessor: "wallet_balance" },
   ];
 
+  // Map rows from users
   const rows = users.map((u) => ({
-    id: u.id || u._id,
-    name: u.name || `${u.firstName || ""} ${u.lastName || ""}`.trim(),
+    id: u.id,
+    first_name: u.first_name,
+    last_name: u.last_name,
     email: u.email,
-    role: u.role || u.type || "",
+    phone: u.phone,
+    wallet_balance: u.wallet_balance,
+    role: u.role,
+    createdAt: new Date(u.createdAt).toLocaleString(),
+    updatedAt: new Date(u.updatedAt).toLocaleString(),
   }));
 
   return (
