@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
 
 import Card from "@mui/material/Card";
 import Switch from "@mui/material/Switch";
@@ -20,21 +21,25 @@ function Basic() {
   const navigate = useNavigate();
 
   const [rememberMe, setRememberMe] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // react-hook-form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = async (data) => {
     setError(null);
     setLoading(true);
     try {
       await login(dispatch, {
-        email,
-        password,
+        email: data.email,
+        password: data.password,
         remember: rememberMe,
       });
       navigate("/dashboard");
@@ -69,27 +74,44 @@ function Basic() {
         </MDBox>
 
         <MDBox pt={4} pb={3} px={3}>
-          <MDBox component="form" role="form" onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            {/* Email */}
             <MDBox mb={2}>
               <MDInput
                 type="email"
                 label="Email"
                 fullWidth
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
+                error={!!errors.email}
+                helperText={errors.email?.message}
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /\S+@\S+\.\S+/,
+                    message: "Invalid email address",
+                  },
+                })}
               />
             </MDBox>
+
+            {/* Password */}
             <MDBox mb={2}>
               <MDInput
                 type="password"
                 label="Password"
                 fullWidth
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
+                error={!!errors.password}
+                helperText={errors.password?.message}
+                {...register("password", {
+                  required: "Password is required",
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters",
+                  },
+                })}
               />
             </MDBox>
+
+            {/* Remember Me */}
             <MDBox display="flex" alignItems="center" ml={-1}>
               <Switch checked={rememberMe} onChange={handleSetRememberMe} />
               <MDTypography
@@ -103,6 +125,7 @@ function Basic() {
               </MDTypography>
             </MDBox>
 
+            {/* Error message */}
             {error && (
               <MDBox mt={2}>
                 <MDTypography variant="caption" color="error">
@@ -111,12 +134,14 @@ function Basic() {
               </MDBox>
             )}
 
+            {/* Submit Button */}
             <MDBox mt={4} mb={1}>
               <MDButton type="submit" variant="gradient" color="info" fullWidth disabled={loading}>
                 {loading ? "Signing in..." : "Sign in"}
               </MDButton>
             </MDBox>
 
+            {/* Forgot Password */}
             <MDBox mt={3} mb={1} textAlign="center">
               <MDTypography variant="button" color="text">
                 Forgot your password?{" "}
@@ -132,7 +157,7 @@ function Basic() {
                 </MDTypography>
               </MDTypography>
             </MDBox>
-          </MDBox>
+          </form>
         </MDBox>
       </Card>
     </BasicLayout>
