@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form";
 
 import Card from "@mui/material/Card";
 import Switch from "@mui/material/Switch";
+import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
 
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
@@ -77,38 +79,40 @@ function Basic() {
           <form onSubmit={handleSubmit(onSubmit)}>
             {/* Email */}
             <MDBox mb={2}>
-              <MDInput
-                type="email"
-                label="Email"
-                fullWidth
-                error={!!errors.email}
-                helperText={errors.email?.message}
-                {...register("email", {
-                  required: "Email is required",
-                  pattern: {
-                    value: /\S+@\S+\.\S+/,
-                    message: "Invalid email address",
-                  },
-                })}
-              />
+              <FormControl fullWidth error={!!errors.email}>
+                <MDInput
+                  type="email"
+                  label="Email"
+                  fullWidth
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /\S+@\S+\.\S+/,
+                      message: "Invalid email address",
+                    },
+                  })}
+                />
+                {errors.email && <FormHelperText>{errors.email.message}</FormHelperText>}
+              </FormControl>
             </MDBox>
 
             {/* Password */}
             <MDBox mb={2}>
-              <MDInput
-                type="password"
-                label="Password"
-                fullWidth
-                error={!!errors.password}
-                helperText={errors.password?.message}
-                {...register("password", {
-                  required: "Password is required",
-                  minLength: {
-                    value: 6,
-                    message: "Password must be at least 6 characters",
-                  },
-                })}
-              />
+              <FormControl fullWidth error={!!errors.password}>
+                <MDInput
+                  type="password"
+                  label="Password"
+                  fullWidth
+                  {...register("password", {
+                    required: "Password is required",
+                    minLength: {
+                      value: 6,
+                      message: "Password must be at least 6 characters",
+                    },
+                  })}
+                />
+                {errors.password && <FormHelperText>{errors.password.message}</FormHelperText>}
+              </FormControl>
             </MDBox>
 
             {/* Remember Me */}
@@ -125,7 +129,7 @@ function Basic() {
               </MDTypography>
             </MDBox>
 
-            {/* Error message */}
+            {/* API Error message */}
             {error && (
               <MDBox mt={2}>
                 <MDTypography variant="caption" color="error">

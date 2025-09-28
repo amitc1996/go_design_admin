@@ -1,14 +1,7 @@
 import { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
 import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
 import MDButton from "components/MDButton";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
@@ -16,56 +9,52 @@ import MDSnackbar from "components/MDSnackbar";
 
 import PageLayout from "pages/layouts/PageLayout";
 
-import { listUsers, updatePassword } from "api/profile";
+import { getAccount, updatePassword } from "api/profile";
 import { useForm } from "react-hook-form";
 
-export default function UsersPage() {
-  const [users, setUsers] = useState([]);
+export default function ProfilePage() {
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  // Fetch users
   useEffect(() => {
     let isMounted = true;
-    const fetchUsers = async () => {
+    const fetchProfile = async () => {
       try {
-        const data = await listUsers();
-        if (isMounted) {
-          setUsers(Array.isArray(data) ? data : data?.items || []);
-        }
+        const data = await getAccount(1);
+        if (isMounted) setUser(data);
       } catch (err) {
-        if (isMounted) setError(err?.message || "Failed to load users");
+        if (isMounted) setError(err?.message || "Failed to load profile");
       } finally {
         if (isMounted) setLoading(false);
       }
     };
-    fetchUsers();
+    fetchProfile();
     return () => {
       isMounted = false;
     };
   }, []);
 
-  // Change password form setup
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
   } = useForm();
 
   const onChangePassword = async (data) => {
     try {
-      await updatePassword({
-        oldPassword: data.oldPassword,
-        newPassword: data.newPassword,
-      });
+      await updatePassword({ id: 1, oldPassword: data.oldPassword, newPassword: data.newPassword });
       setSuccess("Password updated successfully!");
       reset();
     } catch (err) {
       setError(err?.message || "Failed to update password");
     }
   };
+
+  if (loading) return <MDTypography>Loading profile...</MDTypography>;
 
   return (
     <PageLayout>
@@ -74,7 +63,7 @@ export default function UsersPage() {
           <Card>
             <MDBox p={3}>
               <MDTypography variant="h6" mb={2}>
-                Change Password
+                Profile: {user?.first_name} {user?.last_name}
               </MDTypography>
               <form onSubmit={handleSubmit(onChangePassword)}>
                 <MDBox mb={2}>
@@ -107,8 +96,7 @@ export default function UsersPage() {
                     label="Confirm New Password"
                     {...register("confirmPassword", {
                       required: "Please confirm new password",
-                      validate: (val, values) =>
-                        val === values.newPassword || "Passwords do not match",
+                      validate: (val) => val === watch("newPassword") || "Passwords do not match",
                     })}
                     error={Boolean(errors.confirmPassword)}
                     helperText={errors.confirmPassword?.message}

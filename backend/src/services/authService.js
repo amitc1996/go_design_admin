@@ -3,6 +3,7 @@ import { generateAccessToken, generateRefreshToken } from "../utils/tokenUtils.j
 import crypto from "crypto";
 import sendEmail from "../utils/sendEmail.js";
 import { Op } from "sequelize";
+import bcrypt from "bcryptjs"; // Add bcrypt
 
 const signup = async (data) => {
   const user = await User.create(data);
@@ -35,6 +36,7 @@ const signup = async (data) => {
 
 const login = async (email, password) => {
   const user = await User.findOne({ where: { email } });
+  console.log(await user.matchPassword(password));
   if (user && (await user.matchPassword(password))) {
     const accessToken = generateAccessToken(user.id);
     const refreshToken = generateRefreshToken(user.id);
@@ -113,6 +115,7 @@ const resetPassword = async (token, newPassword) => {
 
   if (!user) throw new Error("Invalid or expired token");
 
+  // Assign new password, let model hook hash it
   user.password = newPassword;
   user.resetToken = null;
   user.resetTokenExpire = null;
