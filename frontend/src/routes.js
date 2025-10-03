@@ -6,6 +6,7 @@ import ForgotPassword from "pages/auth/ForgotPassword";
 import ResetPassword from "pages/auth/ResetPassword";
 import Users from "pages/users/user";
 import Projects from "pages/projects/project";
+import CreateProjects from "pages/projects/create_project";
 const routes = [
   {
     type: "collapse",
@@ -32,6 +33,11 @@ const routes = [
     icon: <Icon fontSize="small">work</Icon>, // changed
     route: "/projects",
     component: <Projects />,
+    isPrivate: true,
+  },
+  {
+    route: "/projects/create",
+    component: <CreateProjects />,
     isPrivate: true,
   },
   {
