@@ -58,7 +58,7 @@ const routes = [
     icon: <Icon fontSize="small">settings</Icon>,
     route: "/settings",
     component: <AccountSettings />,
-    isPrivate: false,
+    isPrivate: true,
   },
   {
     type: "collapse",

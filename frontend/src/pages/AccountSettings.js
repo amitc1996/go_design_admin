@@ -23,7 +23,7 @@ export default function ProfilePage() {
     const fetchProfile = async () => {
       try {
         const data = await getAccount(1);
-        if (isMounted) setUser(data);
+        if (isMounted) setUser(data.data);
       } catch (err) {
         if (isMounted) setError(err?.message || "Failed to load profile");
       } finally {
@@ -50,7 +50,9 @@ export default function ProfilePage() {
       setSuccess("Password updated successfully!");
       reset();
     } catch (err) {
-      setError(err?.message || "Failed to update password");
+      const apiMessage =
+        err?.response?.data?.message || err?.message || "Failed to update password";
+      setError(apiMessage);
     }
   };
 
@@ -63,7 +65,7 @@ export default function ProfilePage() {
           <Card>
             <MDBox p={3}>
               <MDTypography variant="h6" mb={2}>
-                Profile: {user?.first_name} {user?.last_name}
+                Change Password
               </MDTypography>
               <form onSubmit={handleSubmit(onChangePassword)}>
                 <MDBox mb={2}>

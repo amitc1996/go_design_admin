@@ -41,7 +41,7 @@ const login = async (email, password) => {
     throw new Error("User not found with this email");
   }
 
-  const isMatch = await user.matchPassword(password);
+  const isMatch = await user.matchPassword(password,'login');
   if (!isMatch) {
     throw new Error("Invalid password");
   }

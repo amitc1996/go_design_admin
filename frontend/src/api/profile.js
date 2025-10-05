@@ -6,12 +6,12 @@ export async function updatePassword(data) {
 }
 
 export async function updateAccount(id, data) {
-  const res = await api.put(`/profile/${id}/account`, data);
+  const res = await api.put(`/user/profile/${id}/account`, data);
   return res.data;
 }
 
 export async function getAccount(id) {
-  const res = await api.get(`/profile/${id}`);
+  const res = await api.get(`user/profile/${id}`);
   return res.data;
 }
 

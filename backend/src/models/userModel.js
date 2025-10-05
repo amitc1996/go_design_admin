@@ -103,7 +103,7 @@ const User = sequelize.define("admin_user", {
   }
 });
 
-User.prototype.matchPassword = async function (enteredPassword) {
+User.prototype.matchPassword = async function (enteredPassword,purpose = "login") {
   if (!this || !this.password) {
     throw new Error("User not found or password not set");
   }
@@ -111,7 +111,12 @@ User.prototype.matchPassword = async function (enteredPassword) {
   const isMatch = await bcrypt.compare(enteredPassword, this.password);
 
   if (!isMatch) {
-    throw new Error("Invalid credentials");
+    if (purpose === "login") {
+      throw new Error("Incorrect email or password");
+    }else if(purpose === "change_password"){
+      throw new Error("Current password is incorrect");
+    }
+    throw new Error("Password does not match");
   }
 
   return true;

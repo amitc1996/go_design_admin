@@ -1,20 +1,31 @@
 import userService from "../services/userService.js";
+import { success, errors } from "../utils/response.js";
 
 export const getProfile = async (req, res) => {
   try {
     const user = await userService.getProfile(req.user.id);
-    res.json(user);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+    const resp = success(
+      { status: 200, data: user, statusText: "OK" },
+      "User profile fetched successfully."
+    );
+    res.status(200).json(resp);
+  } catch (error) {
+    const resp = errors(error, "Failed to fetch user profile");
+    res.status(resp.status || 400).json(resp);
   }
 };
 
 export const updateProfile = async (req, res) => {
   try {
     const user = await userService.updateProfile(req.user.id, req.body);
-    res.json(user);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+    const resp = success(
+      { status: 200, data: user, statusText: "OK" },
+      "User profile updated successfully."
+    );
+    res.status(200).json(resp);
+  } catch (error) {
+    const resp = errors(error, "Failed to update user profile");
+    res.status(resp.status || 400).json(resp);
   }
 };
 
@@ -22,17 +33,24 @@ export const updatePassword = async (req, res) => {
   try {
     const { id, oldPassword, newPassword } = req.body;
     if (!id || !oldPassword || !newPassword) {
-      return res
-        .status(400)
-        .json({ message: "ID, old password, and new password are required" });
+      const resp = errors(
+        new Error("Old password, and new password are required"),
+        "Missing required fields"
+      );
+      return res.status(resp.status || 400).json(resp);
     }
 
     const updatedUser = await userService.updatePassword(id, oldPassword, newPassword);
 
-    res.json({ message: "Password updated successfully", user: updatedUser });
+    const resp = success(
+      { status: 200, data: updatedUser, statusText: "OK" },
+      "Password updated successfully."
+    );
+    res.status(200).json(resp);
   } catch (error) {
     console.error("Error updating password:", error.message);
     const status = error.message === "Old password is incorrect" ? 400 : 500;
-    res.status(status).json({ message: error.message });
+    const resp = errors(error, "Failed to update password");
+    res.status(status).json(resp);
   }
 };
