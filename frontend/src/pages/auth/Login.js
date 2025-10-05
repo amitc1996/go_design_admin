@@ -81,30 +81,6 @@ function Basic() {
           </MDTypography>
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
-          <Collapse in={showError}>
-            <Alert
-              severity="error"
-              sx={{
-                mb: 3,
-                borderRadius: "12px",
-                maxWidth: "500px",
-                mx: "auto",
-                boxShadow: 3,
-              }}
-              action={
-                <IconButton
-                  aria-label="close"
-                  color="inherit"
-                  size="small"
-                  onClick={() => setShowError(false)}
-                >
-                  <CloseIcon fontSize="inherit" />
-                </IconButton>
-              }
-            >
-              {error}
-            </Alert>
-          </Collapse>
           <form onSubmit={handleSubmit(onSubmit)}>
             {/* Email */}
             <MDBox mb={2}>
@@ -164,6 +140,26 @@ function Basic() {
                 {loading ? "Signing in..." : "Sign in"}
               </MDButton>
             </MDBox>
+
+            {error && (
+              <MDBox mb={2}>
+                <Alert
+                  severity="error"
+                  action={
+                    <IconButton
+                      aria-label="close"
+                      color="inherit"
+                      size="small"
+                      onClick={() => setShowError(false)}
+                    >
+                      <CloseIcon fontSize="inherit" />
+                    </IconButton>
+                  }
+                >
+                  {error}
+                </Alert>
+              </MDBox>
+            )}
 
             {/* Forgot Password */}
             <MDBox mt={3} mb={1} textAlign="center">
