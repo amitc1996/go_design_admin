@@ -52,8 +52,7 @@ const login = async (email, password) => {
   return {
     success: true,
     message: "Login successful",
-    data: {
-      user: {
+    user: {
         id: user.id,
         name: user.name,
         email: user.email,
@@ -69,7 +68,6 @@ const login = async (email, password) => {
         token_type: "Bearer",
         expires_in: 1800,
       },
-    },
   };
 };
 
