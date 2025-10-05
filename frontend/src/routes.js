@@ -9,8 +9,8 @@ function lazyWithDelay(factory, ms = 1000) {
 }
 
 // ✅ Lazy load all pages with optional delay
-const Dashboard = lazyWithDelay(() => import("pages/Dashboard"), 2000);
-const AccountSettings = lazyWithDelay(() => import("pages/AccountSettings"), 200);
+const Dashboard = lazyWithDelay(() => import("pages/Dashboard"), 1000);
+const AccountSettings = lazyWithDelay(() => import("pages/AccountSettings"), 1000);
 const SignIn = lazyWithDelay(() => import("pages/auth/Login"), 500);
 const ForgotPassword = lazyWithDelay(() => import("pages/auth/ForgotPassword"), 500);
 const ResetPassword = lazyWithDelay(() => import("pages/auth/ResetPassword"), 500);
@@ -58,7 +58,7 @@ const routes = [
     icon: <Icon fontSize="small">settings</Icon>,
     route: "/settings",
     component: <AccountSettings />,
-    isPrivate: true,
+    isPrivate: false,
   },
   {
     type: "collapse",

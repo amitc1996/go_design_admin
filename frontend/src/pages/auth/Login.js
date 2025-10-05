@@ -6,6 +6,10 @@ import Card from "@mui/material/Card";
 import Switch from "@mui/material/Switch";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
+import Alert from "@mui/material/Alert";
+import Collapse from "@mui/material/Collapse";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
@@ -13,7 +17,6 @@ import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
 
 import BasicLayout from "layouts/authentication/components/BasicLayout";
-
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 import logoImage from "assets/images/logo.png";
 import { useAuthDispatch, login } from "store/AuthContext";
@@ -25,10 +28,10 @@ function Basic() {
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [showError, setShowError] = useState(false);
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
-  // react-hook-form
   const {
     register,
     handleSubmit,
@@ -37,6 +40,7 @@ function Basic() {
 
   const onSubmit = async (data) => {
     setError(null);
+    setShowError(false);
     setLoading(true);
     try {
       await login(dispatch, {
@@ -47,7 +51,9 @@ function Basic() {
       navigate("/dashboard");
     } catch (err) {
       console.error("Login error:", err);
-      setError(err.response?.data?.message || "Login failed");
+      const message = err.response?.data?.message || "Login failed. Please try again.";
+      setError(message);
+      setShowError(true);
     } finally {
       setLoading(false);
     }
@@ -74,8 +80,31 @@ function Basic() {
             Sign in
           </MDTypography>
         </MDBox>
-
         <MDBox pt={4} pb={3} px={3}>
+          <Collapse in={showError}>
+            <Alert
+              severity="error"
+              sx={{
+                mb: 3,
+                borderRadius: "12px",
+                maxWidth: "500px",
+                mx: "auto",
+                boxShadow: 3,
+              }}
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={() => setShowError(false)}
+                >
+                  <CloseIcon fontSize="inherit" />
+                </IconButton>
+              }
+            >
+              {error}
+            </Alert>
+          </Collapse>
           <form onSubmit={handleSubmit(onSubmit)}>
             {/* Email */}
             <MDBox mb={2}>
@@ -128,15 +157,6 @@ function Basic() {
                 &nbsp;&nbsp;Remember me
               </MDTypography>
             </MDBox>
-
-            {/* API Error message */}
-            {error && (
-              <MDBox mt={2}>
-                <MDTypography variant="caption" color="error">
-                  {error}
-                </MDTypography>
-              </MDBox>
-            )}
 
             {/* Submit Button */}
             <MDBox mt={4} mb={1}>

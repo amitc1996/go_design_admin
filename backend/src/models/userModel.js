@@ -103,9 +103,18 @@ const User = sequelize.define("admin_user", {
   }
 });
 
-
 User.prototype.matchPassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
+  if (!this || !this.password) {
+    throw new Error("User not found or password not set");
+  }
+
+  const isMatch = await bcrypt.compare(enteredPassword, this.password);
+
+  if (!isMatch) {
+    throw new Error("Invalid credentials");
+  }
+
+  return true;
 };
 
 export default User;

@@ -36,36 +36,43 @@ const signup = async (data) => {
 
 const login = async (email, password) => {
   const user = await User.findOne({ where: { email } });
-  console.log(await user.matchPassword(password));
-  if (user && (await user.matchPassword(password))) {
-    const accessToken = generateAccessToken(user.id);
-    const refreshToken = generateRefreshToken(user.id);
 
-    return {
-      success: true,
-      message: "Login successful",
-      data: {
-        user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          username: user.username,
-          role: user.role,
-          is_active: user.is_active,
-          created_at: user.createdAt,
-          updated_at: user.updatedAt,
-        },
-        tokens: {
-          access_token: accessToken,
-          refresh_token: refreshToken,
-          token_type: "Bearer",
-          expires_in: 1800,
-        },
-      },
-    };
+  if (!user) {
+    throw new Error("User not found with this email");
   }
-  throw new Error("Invalid email or password");
+
+  const isMatch = await user.matchPassword(password);
+  if (!isMatch) {
+    throw new Error("Invalid password");
+  }
+
+  const accessToken = generateAccessToken(user.id);
+  const refreshToken = generateRefreshToken(user.id);
+
+  return {
+    success: true,
+    message: "Login successful",
+    data: {
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        username: user.username,
+        role: user.role,
+        is_active: user.is_active,
+        created_at: user.createdAt,
+        updated_at: user.updatedAt,
+      },
+      tokens: {
+        access_token: accessToken,
+        refresh_token: refreshToken,
+        token_type: "Bearer",
+        expires_in: 1800,
+      },
+    },
+  };
 };
+
 
 const refreshAccessToken = async (refreshToken) => {
   try {
