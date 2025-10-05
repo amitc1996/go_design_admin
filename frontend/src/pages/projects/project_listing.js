@@ -65,7 +65,7 @@ export default function ProjectListing() {
 
   const columns = [
     { Header: "Name", accessor: "name", width: "30%" },
-    { Header: "Description", accessor: "description" },
+    { Header: "Base Price", accessor: "base_price" },
     {
       Header: "Actions",
       accessor: "actions",
@@ -77,7 +77,7 @@ export default function ProjectListing() {
   const rows = projects.map((p) => ({
     id: p.id,
     name: p.name,
-    description: p.description,
+    base_price: p.base_price,
     actions: (
       <MDBox>
         <IconButton component={Link} to={`/projects/view/${p.id}`} title="View Project">

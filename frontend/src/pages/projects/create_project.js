@@ -1,35 +1,36 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useForm, Controller } from "react-hook-form";
-
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import TextField from "@mui/material/TextField";
-
+import MDButton from "components/MDButton";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
-import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
 import PageLayout from "pages/layouts/PageLayout";
 
+import { useForm } from "react-hook-form";
 import { createProject } from "api/project";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateProject() {
   const navigate = useNavigate();
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const {
-    control,
+    register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({
-    defaultValues: { name: "", description: "" },
+    defaultValues: { name: "", base_price: "", description: "" },
   });
 
-  const handleFormSubmit = async (data) => {
+  const onCreateProject = async (data) => {
     try {
       await createProject(data);
-      // Navigate to the project list on success, passing a success message
+      setSuccess("Project created successfully!");
+      reset();
       navigate("/projects", { state: { successMessage: "Project created successfully!" } });
     } catch (err) {
       setError(err?.message || "Failed to create project");
@@ -38,62 +39,50 @@ export default function CreateProject() {
 
   return (
     <PageLayout>
-      <Grid container spacing={3} justifyContent="center">
-        <Grid item xs={12} md={8} lg={6}>
+      <Grid container spacing={3}>
+        <Grid item xs={12}>
           <Card>
-            <MDBox
-              variant="gradient"
-              bgColor="info"
-              borderRadius="lg"
-              coloredShadow="info"
-              mx={2}
-              mt={-3}
-              p={2}
-              mb={1}
-              textAlign="center"
-            >
-              <MDTypography variant="h4" fontWeight="medium" color="white">
+            <MDBox p={3}>
+              <MDTypography variant="h6" mb={2}>
                 Create New Project
               </MDTypography>
-            </MDBox>
-            <MDBox pt={4} pb={3} px={3}>
-              <form onSubmit={handleSubmit(handleFormSubmit)}>
+              <form onSubmit={handleSubmit(onCreateProject)}>
+                {/* Project Name and Base Price on same line */}
+                <Grid container spacing={2} mb={2}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Project Name"
+                      {...register("name", { required: "Project name is required" })}
+                      error={Boolean(errors.name)}
+                      helperText={errors.name?.message}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Base Price"
+                      type="number"
+                      {...register("base_price", { required: "Base price is required" })}
+                      error={Boolean(errors.base_price)}
+                      helperText={errors.base_price?.message}
+                    />
+                  </Grid>
+                </Grid>
+
+                {/* Description */}
                 <MDBox mb={2}>
-                  <Controller
-                    name="name"
-                    control={control}
-                    rules={{ required: "Project name is required" }}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        label="Project Name"
-                        variant="standard"
-                        fullWidth
-                        autoFocus
-                        error={!!errors.name}
-                        helperText={errors.name?.message}
-                      />
-                    )}
+                  <TextField
+                    fullWidth
+                    label="Description"
+                    multiline
+                    rows={4}
+                    {...register("description")}
                   />
                 </MDBox>
-                <MDBox mb={2}>
-                  <Controller
-                    name="description"
-                    control={control}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        label="Description"
-                        variant="standard"
-                        fullWidth
-                        multiline
-                        rows={4}
-                      />
-                    )}
-                  />
-                </MDBox>
-                <MDBox mt={4} mb={1}>
-                  <MDButton variant="gradient" color="info" type="submit" fullWidth>
+
+                <MDBox display="flex" justifyContent="flex-end">
+                  <MDButton type="submit" variant="gradient" color="info">
                     Create Project
                   </MDButton>
                 </MDBox>
@@ -102,6 +91,8 @@ export default function CreateProject() {
           </Card>
         </Grid>
       </Grid>
+
+      {/* Snackbars */}
       <MDSnackbar
         color="error"
         icon="warning"
@@ -110,6 +101,15 @@ export default function CreateProject() {
         open={Boolean(error)}
         onClose={() => setError("")}
         close={() => setError("")}
+      />
+      <MDSnackbar
+        color="success"
+        icon="check"
+        title="Success"
+        content={success}
+        open={Boolean(success)}
+        onClose={() => setSuccess("")}
+        close={() => setSuccess("")}
       />
     </PageLayout>
   );

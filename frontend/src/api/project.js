@@ -11,8 +11,8 @@ export async function listProjects() {
 /**
  * Create a new project
  */
-export async function createProject({ name, description }) {
-  const res = await api.post("/projects", { name, description });
+export async function createProject(data) {
+  const res = await api.post("/projects", data);
   return res.data.data || res.data;
 }
 
