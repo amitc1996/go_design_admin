@@ -1,14 +1,12 @@
 import React, { lazy } from "react";
 import Icon from "@mui/material/Icon";
-
-// Delay helper
+import CategoryIcon from "@mui/icons-material/Category";
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function lazyWithDelay(factory, ms = 1000) {
   return React.lazy(() => Promise.all([factory(), sleep(ms)]).then(([module]) => module));
 }
 
-// ✅ Lazy load all pages with optional delay
 const Dashboard = lazyWithDelay(() => import("pages/Dashboard"), 1000);
 const AccountSettings = lazyWithDelay(() => import("pages/AccountSettings"), 1000);
 const SignIn = lazyWithDelay(() => import("pages/auth/Login"), 500);
@@ -17,6 +15,7 @@ const ResetPassword = lazyWithDelay(() => import("pages/auth/ResetPassword"), 50
 const Users = lazyWithDelay(() => import("pages/users/user"), 1000);
 const Projects = lazyWithDelay(() => import("pages/projects/project"), 1000);
 const CreateProjects = lazyWithDelay(() => import("pages/projects/create_project"), 1000);
+const ProjectCategory = lazyWithDelay(() => import("pages/ProjectCategories"), 1000);
 
 const routes = [
   {
@@ -35,6 +34,15 @@ const routes = [
     icon: <Icon fontSize="small">group</Icon>,
     route: "/users",
     component: <Users />,
+    isPrivate: true,
+  },
+  {
+    type: "collapse",
+    name: "Project Categories",
+    key: "project_categories",
+    icon: <CategoryIcon fontSize="small" />,
+    route: "/project_categories",
+    component: <ProjectCategory />,
     isPrivate: true,
   },
   {
