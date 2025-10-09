@@ -1,46 +1,31 @@
-import axios from "axios";
+import api from "../services/api"; // <-- path to your main axios instance file
 
-const API_URL = "/api/project-categories";
-
-// Helper to get the auth token from local storage
-const getAuthHeaders = () => {
-  const token = localStorage.getItem("token"); // Adjust if you store the token differently
-  return token ? { Authorization: `Bearer ${token}` } : {};
-};
-
-const getCategories = async () => {
-  const response = await axios.get(API_URL, {
-    headers: getAuthHeaders(),
-  });
-  return response.data.data;
-};
-
-const createCategory = async (categoryData) => {
-  const response = await axios.post(API_URL, categoryData, {
-    headers: getAuthHeaders(),
-  });
-  return response.data.data;
-};
-
-const updateCategory = async (id, categoryData) => {
-  const response = await axios.put(`${API_URL}/${id}`, categoryData, {
-    headers: getAuthHeaders(),
-  });
-  return response.data.data;
-};
-
-const deleteCategory = async (id) => {
-  const response = await axios.delete(`${API_URL}/${id}`, {
-    headers: getAuthHeaders(),
-  });
-  return response.data;
-};
+const API_PATH = "/project_categories";
 
 const projectCategoryApi = {
-  getCategories,
-  createCategory,
-  updateCategory,
-  deleteCategory,
+  // Get all categories
+  async getCategories() {
+    const response = await api.get(API_PATH);
+    return response.data.data;
+  },
+
+  // Create new category
+  async createCategory(categoryData) {
+    const response = await api.post(API_PATH, categoryData);
+    return response.data.data;
+  },
+
+  // Update category by ID
+  async updateCategory(id, categoryData) {
+    const response = await api.put(`${API_PATH}/${id}`, categoryData);
+    return response.data.data;
+  },
+
+  // Delete category by ID
+  async deleteCategory(id) {
+    const response = await api.delete(`${API_PATH}/${id}`);
+    return response.data;
+  },
 };
 
 export default projectCategoryApi;
